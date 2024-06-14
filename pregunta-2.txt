@@ -1,0 +1,17 @@
+1.- ...
+2.- A se puede tomar como una representación binaria de n. Como dice el enunciado,
+si la representación binaria de n, el i-ésimo bit es 1, este estará lleno, y si es
+0, estará vacío. Por ejemplo, si n = 10, n_binario = 0b1010. Desde el bit menos
+significativo al más significativo:
+
+  n_binario[0] = 0, A[0] tiene capacidad 2^0 = 1, y está vacío, así que hay 0 elementos
+  n_binario[1] = 1, A[0] tiene capacidad 2^1 = 2, y está lleno, así que hay 2 elementos
+  n_binario[2] = 0, A[0] tiene capacidad 2^2 = 4, y está vacío, así que hay 0 elementos
+  n_binario[3] = 1, A[0] tiene capacidad 2^2 = 8, y está lleno, así que hay 8 elementos
+
+2 + 8 = 10
+
+En general, como dice el enunciado, $n = \sum_{i}^{k-1}{2^i n_i}$, y en este caso,
+cada $n_i$ es $length(A[i])$. Como los "1s" son los que suman al total, y éstos
+representan arrays lleno, el siguiente paso logico es que la cantidad total de elementos
+en los k arreglos es igual a n.
