@@ -18,7 +18,7 @@ int main() {
     }
 
     int maxLoad = *max_element(drivers.begin(), drivers.end());
-    cout << "Maximum load for a driver: " << maxLoad << endl;
+    cout << "Maxima carga p conductor: " << maxLoad << endl;
 
     return 0;
 }
