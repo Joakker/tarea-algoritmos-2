@@ -1,17 +1,78 @@
-1.- ...
-2.- A se puede tomar como una representación binaria de n. Como dice el enunciado,
-si la representación binaria de n, el i-ésimo bit es 1, este estará lleno, y si es
-0, estará vacío. Por ejemplo, si n = 10, n_binario = 0b1010. Desde el bit menos
+1) Siguiendo los puntos de la estrategia planteada:
+
+Para que todos los promedios (los $n$ elementos) puedan ser acomodados en estos arreglos, la suma de las capacidades de los arreglos que están llenos debe ser al menos $n$, esto es:
+\begin{equation*}
+    n = \sum_{i=0}^{k-1}2^i \cdot n_i
+\end{equation*}
+
+$k$ es el número de bits necesarios para representar $n$.
+
+En general, el número $n$ en binario requiere $k$ bits, donde $k$ es el menor número tal que
+
+\begin{equation*}
+    2^{k-1} \leq n \leq 2^k
+\end{equation*}
+
+Luego,
+
+Observamos que $2^k$ es la menor potencia de 2 que es mayor que $n$. Por lo tanto, $k$ es el menor entero tal que $2^k$ es mayor o igual a $n+1$:
+
+\begin{equation*}
+    \begin{aligned}
+        2^k &\geq n+1\\
+        k &\geq \log_2 (n+1) & \quad &\text{($\log_2$ en ambos lados)} \\
+        k &= \lceil \log_2 (n+1) \rceil & \quad &\text{(Redondeamos hacia arriba para obtener un entero)}
+    \end{aligned}
+\end{equation*}
+
+2) $A$ se puede tomar como una representación binaria de $n$. Como dice el enunciado, si la representación binaria de $n$, el i-ésimo bit es 1, este estará lleno, y si es 0, estará vacío. Por ejemplo, si $n = 10$, $n_binario = 0b1010$. Desde el bit menos
 significativo al más significativo:
 
-  n_binario[0] = 0, A[0] tiene capacidad 2^0 = 1, y está vacío, así que hay 0 elementos
-  n_binario[1] = 1, A[0] tiene capacidad 2^1 = 2, y está lleno, así que hay 2 elementos
-  n_binario[2] = 0, A[0] tiene capacidad 2^2 = 4, y está vacío, así que hay 0 elementos
-  n_binario[3] = 1, A[0] tiene capacidad 2^2 = 8, y está lleno, así que hay 8 elementos
+\begin{itemize}
+    \item $\text{n\_binario}[0] = 0$, $A[0]$ tiene capacidad $2^0 = 1$, y está vacío, así que hay 0 elementos.
+    \item $\text{n\_binario}[1] = 1$, $A[1]$ tiene capacidad $2^1 = 2$, y está lleno, así que hay 2 elementos.
+    \item $\text{n\_binario}[2] = 0$, $A[2]$ tiene capacidad $2^2 = 4$, y está vacío, así que hay 0 elementos.
+    \item $\text{n\_binario}[3] = 1$, $A[3]$ tiene capacidad $2^3 = 8$, y está lleno, así que hay 8 elementos.
+\end{itemize}
 
 2 + 8 = 10
 
-En general, como dice el enunciado, $n = \sum_{i}^{k-1}{2^i n_i}$, y en este caso,
-cada $n_i$ es $length(A[i])$. Como los "1s" son los que suman al total, y éstos
-representan arrays lleno, el siguiente paso logico es que la cantidad total de elementos
-en los k arreglos es igual a n.
+En general, como dice el enunciado, $n = \sum_{i}^{k-1}{2^i n_i}$, y en este caso, cada $n_i$ es $length(A[i])$. Como los "1s" son los que suman al total, y éstos representan arrays llenos, el siguiente paso lógico es que la cantidad total de elementos en los $k$ arreglos es igual a $n$.
+
+3)
+Pseudocódigo de la operación $\operatorname{Buscar}$ y $\operatorname{BusquedaBinaria}$ (utilizada en Buscar)
+
+\begin{verbatim}
+Función Buscar(x, A, n):
+    k = ceil(log_2(n + 1))
+    For i from 0 to k-1:
+        If n & (1 << i) != 0:  //Revisar si A_i está lleno
+            If BusquedaBinaria(A[i], x):
+                Return True
+    Return False
+
+Función BusquedaBinaria(arr, x):
+    left = 0
+    right = length(arr) - 1
+    While left <= right:
+        middle = (left + right)/2
+        If arr[middle] == x:
+            Return True
+        If arr[middle] < x:
+            left = middle + 1
+        Else:
+            right = middle - 1
+Return False
+\end{verbatim}
+
+Complejidad temporal:
+\begin{itemize}
+    \item $k = \lceil(\log_2(n + 1))\rceil$: $O(1)$
+    \item el bucle \textbf{for} se ejecuta k veces y sabemos que $k = ceil(log2(n + 1))$, por lo tanto, el máximo de iteraciones será $O(\log n)$.
+    \item $n \& (1 \ll i) != 0$: operación bit a bit, $O(1)$
+    \item Es conocido que la búsqueda binaria tiene como complejidad temporal en peor caso $O(\log_2 (m))$, donde $m$ es el tamaño del arreglo. Para esta situación, un arreglo $A_i$ lleno es de tamaño $2^i$, por lo tanto, la complejidad temporal en peor caso será $O(\log_2 2^i) = O(i)$. Dado que $i$ varía desde 0 hasta $k-1$, en el peor caso será $O(k-1) = O(\log n)$.
+\end{itemize}
+
+Luego, obtendríamos una complejidad de $O((\log n)^2)$, pero debido a que el número de elementos en cada $A_i$ sigue una distribución exponencial la carga se concentrará en las primeras iteraciones, por lo tanto, la complejidad se amortiza y la complejidad temporal en peor caso será efectivamente: $O(\log n)$
+
+
